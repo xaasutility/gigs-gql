@@ -82,7 +82,7 @@ class GigsAPI extends RESTDataSource {
             bid_count: null,
             budget_minimum: gig.minimum,
             budget_maximum: gig.maximum,
-            type: gig.type,
+            type: gig.type.toUpperCase(),
             status: gig.status,
             title: gig.title,
             preview_description: this.mapDescription(gig.description),
