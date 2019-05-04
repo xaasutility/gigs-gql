@@ -7,16 +7,16 @@ class GigsAPI extends RESTDataSource {
         this.baseURL = 'https://us-central1-xsu-develop.cloudfunctions.net/xsu-agent/'
     }
 
-    mapLocation(q, city, distance) {
+    static mapLocation(q, city, distance) {
         if (city) {
-            q.location = { city }
+            q.location = { city };
             if (distance && distance > 0) {
                 q.location.distance = distance
             }
         }
     }
 
-    mapCompensation (q, comp, compType) {
+    static mapCompensation (q, comp, compType) {
         if (comp) {
             q.compensation = {
                 minimum: comp,
@@ -25,22 +25,22 @@ class GigsAPI extends RESTDataSource {
         }
     }
 
-    mapQuery(q) {
-        const query = {}
+    static mapQuery(q) {
+        const query = {};
         if (q) {
-            const {keywords, city, distance, compensation, compensationType} = q
-            query.keywords = keywords || ''
-            this.mapLocation(query, city, distance)
-            this.mapCompensation(query, compensation, compensationType)
+            const {keywords, city, distance, compensation, compensationType} = q;
+            query.keywords = keywords || '';
+            GigsAPI.mapLocation(query, city, distance);
+            GigsAPI.mapCompensation(query, compensation, compensationType)
         }
         return query
     }
 
-    makeSearchRequest (query, token, offset, size) {
+    static makeSearchRequest (query, token, offset, size) {
         return {
             action: 'search',
             payload: {
-                query: this.mapQuery(query),
+                query: GigsAPI.mapQuery(query),
                 token: token,
                 offset: offset || 0,
                 size: size || 100
@@ -49,8 +49,8 @@ class GigsAPI extends RESTDataSource {
     }
 
     async searchGigs({ query, offset, size, token }) {
-        console.log('gigs:searchGigs - ', query, offset, size, token)
-        const response = await this.post('', this.makeSearchRequest(query, token, offset, size));
+        console.log('gigs:searchGigs - ', query, offset, size, token);
+        const response = await this.post('', GigsAPI.makeSearchRequest(query, token, offset, size));
         // console.log(' Response:', response.token)
 
         if (response) {
@@ -69,7 +69,7 @@ class GigsAPI extends RESTDataSource {
         return { id: gigId }
     }
 
-    mapDescription(desc) {
+    static mapDescription(desc) {
         if (desc) {
             desc = desc.substr(0, 253).concat('...')
         }
@@ -85,7 +85,7 @@ class GigsAPI extends RESTDataSource {
             type: gig.type.toUpperCase(),
             status: gig.status,
             title: gig.title,
-            preview_description: this.mapDescription(gig.description),
+            preview_description: GigsAPI.mapDescription(gig.description),
             time_submitted: gig.datePosted,
             id: gig.zaasId,
             seo_url: gig.url,
@@ -97,4 +97,4 @@ class GigsAPI extends RESTDataSource {
     }
 }
 
-module.exports = GigsAPI
+module.exports = GigsAPI;
