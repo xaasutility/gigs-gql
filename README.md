@@ -2,6 +2,12 @@
 
 This project contains a simple schema for searching gigs.
 
+## Initialize it
+
+```bash
+npm install
+```
+
 ## Run it
 
 ```bash
