@@ -5,6 +5,8 @@ const typeDefs = gql`
     scalar Date
     
     type Query {
+        sources: [Source]!
+        source(id: ID): Source
         gigs(query: GigQuery, offset: Int, size: Int, token: String): GigConnection!
         gig(id: ID!): Gig
         # Queries for the current user
@@ -17,6 +19,13 @@ const typeDefs = gql`
         distance: Int
         compensation: Int
         compensationType: CompensationType
+    }
+    
+    type Source {
+        name: String
+        displayName: String
+        lastUpdate: Date
+        gtsId: String
     }
     
     type GigConnection {
