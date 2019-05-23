@@ -114,7 +114,7 @@ exports.create = () => ({
     isSaved: false
 })
 
-exports.fromGTS = (job, src) => ({
+exports.fromGTS = (job) => ({
     title: job.title,
     description: job.description,
     url: job.applicationInfo.uris[0],
@@ -125,7 +125,7 @@ exports.fromGTS = (job, src) => ({
     ...mapCustomAttributes(job),
     id: job.requisitionId,
     ...mapCompGTSToGig(job),
-    publisher: src.name
+    companyName: job.companyName
 })
 
 exports.toGTS = gig => ({

@@ -22,14 +22,36 @@ const postLoad = source => {
 }
 
 const fetchSource = async (ref) => {
+    console.log('Fetching:', ref);
     let document = await ref.get();
+    console.log('Document:', document);
     let doc = null;
 
     if (document.exists) {
         doc = postLoad(document.data())
     }
 
+    console.log('Result:', doc);
     return doc;
+}
+
+const fetchSourceByCompanyName = async name => {
+    console.log('Fetch by name:', name);
+    const result =
+        await firestore.collection('gig-sources')
+            .where('gtsId', '==', name)
+            .get();
+    console.log('Fetched:', result);
+
+    if (result) {
+        const sources = [];
+        result.forEach(src => {
+            console.log('Source:', src);
+            sources.push(src.data())
+        });
+        return sources.length > 0 ? sources[0] : {}
+    }
+    return {};
 }
 
 const allSources = async () => {
@@ -67,6 +89,7 @@ const updateSource = async source => {
 }
 
 exports.get = getSource
+exports.getByName = fetchSourceByCompanyName
 exports.create = createSource
 exports.update = updateSource
 exports.all = allSources

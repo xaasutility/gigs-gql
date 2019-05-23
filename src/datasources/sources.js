@@ -11,11 +11,17 @@ class SourceAPI extends DataSource {
         console.log('SourceAPI::config - ', config);
     }
 
-    async allSources() {
+    allSources() {
         return sources.all()
     }
 
-    async getSourceById(id) {
+    getSourceById(id) {
         return sources.get(id)
     }
+
+    getSourceByName(name) {
+        return sources.getByName(name)
+    }
 }
+
+module.exports = SourceAPI;

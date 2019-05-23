@@ -1,34 +1,26 @@
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer, gql } = require('apollo-server-cloud-functions');
+
 const typeDefs = require('./schema');
-const { createStore } = require('./utils');
 const resolvers = require('./resolvers');
-const isEmail = require('isemail');
 
-const GigsAPI = require('./datasources/gigs');
-const UserAPI = require('./datasources/user');
+const GigsAPI = require('./datasources/gts');
+//const UserAPI = require('./datasources/user');
+const SourceAPI = require('./datasources/sources');
 
-const store = createStore();
+console.log('Creating Apollo server...');
 
 const server = new ApolloServer({
-    context: async ({ req }) => {
-        const auth = (req.headers && req.headers.authorization) || '';
-        const email = Buffer.from(auth, 'base64').toString('ascii');
-        // if the email isn't formatted validly, return null for user
-        if (!isEmail.validate(email)) return { user: null };
-        // find a user by their email
-        const users = await store.users.findOrCreate({ where: { email } });
-        const user = users && users[0] ? users[0] : null;
-
-        return { user: { ...user.dataValues } };
-    },
     typeDefs,
     resolvers,
     dataSources: () => ({
         gigsAPI: new GigsAPI(),
-        userAPI: new UserAPI({ store })
-    })
+        // userAPI: new UserAPI({ store }),
+        sourceAPI: new SourceAPI()
+    }),
+    playground: true,
+    introspection: true,
 });
 
-server.listen().then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`);
-});
+console.log('...', server);
+
+exports.handler = server.createHandler();

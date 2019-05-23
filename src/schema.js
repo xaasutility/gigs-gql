@@ -1,4 +1,4 @@
-const {gql} = require('apollo-server');
+const { gql } = require('apollo-server-cloud-functions');
 
 const typeDefs = gql`
     
@@ -10,7 +10,7 @@ const typeDefs = gql`
         gigs(query: GigQuery, offset: Int, size: Int, token: String): GigConnection!
         gig(id: ID!): Gig
         # Queries for the current user
-        me: User
+#        me: User
     }
     
     input GigQuery {
@@ -35,11 +35,11 @@ const typeDefs = gql`
         gigs: [Gig]!
     }
     
-    type User {
-        id: ID!
-        email: String!
-        savedGigs: [Gig]!
-    }
+#    type User {
+#        id: ID!
+#        email: String!
+#        savedGigs: [Gig]!
+#    }
     
     type Mutation {
         deleteGigs(gigIds: [ID]!): GigUpdateResponse
@@ -77,6 +77,7 @@ const typeDefs = gql`
         seo_url: String
         publisher: String
         location: Location
+        source: Source!
     }
 `;
 

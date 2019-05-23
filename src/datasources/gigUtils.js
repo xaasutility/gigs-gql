@@ -59,7 +59,7 @@ exports.gigReducer = (gig) => {
         time_submitted: gig.datePosted,
         id: gig.zaasId,
         seo_url: gig.url,
-        publisher: gig.publisher,
+        companyName: gig.companyName,
         location: {
             full_address: gig.location && gig.location.length > 0 ? gig.location[0] : ''
         }

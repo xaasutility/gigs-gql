@@ -1,27 +1,22 @@
-const {ApolloServer, gql} = require('apollo-server-cloud-functions');
-
+const {ApolloServer} = require('apollo-server');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 
 const GigsAPI = require('./datasources/gigs');
-//const UserAPI = require('./datasources/user');
 const SourceAPI = require('./datasources/sources');
 
 const server = new ApolloServer({
+    context: async ({req}) => {
+        return {request: req};
+    },
     typeDefs,
     resolvers,
     dataSources: () => ({
         gigsAPI: new GigsAPI(),
-        // userAPI: new UserAPI({ store }),
         sourceAPI: new SourceAPI()
-    }),
-    playground: true,
-    introspection: true,
+    })
 });
 
-exports.handler = server.createHandler({
-    cors: {
-        origin: true,
-        credentials: true,
-    },
+server.listen().then(({url}) => {
+    console.log(`🚀 Server ready at ${url}`);
 });
